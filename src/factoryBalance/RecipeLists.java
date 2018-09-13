@@ -59,10 +59,10 @@ public class RecipeLists {
 	//	Type: Inserters and Belts		Code: I		Sheet: 4
 		//	Type: Inserter				Code: IY1
 		String[] IY1 = {"1","0.5",/**/"Need Inputs"};
-		Small=CT3D(Small,IY1,2,4);
+		Small=CT3D(Small,IY1,0,4);
 		//	Type: Fast Inserter			Code: IB1
 		String[] IB1 = {"1","0.5",/**/"Need Inputs"};
-		Small=CT3D(Small,IB1,2,4);
+		Small=CT3D(Small,IB1,1,4);
 		//	Type: Filter Inserter		Code: IF1
 		String[] IG1 = {"1","0.5",/**/"Need Inputs"};
 		Small=CT3D(Small,IG1,2,4);
