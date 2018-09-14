@@ -53,7 +53,7 @@ public class TemporyName {
 					testForNull = String.valueOf(Ratio[c][0][s]);
 					Ratio2[a][0][s] = Multiplyers(Ratio[c][0][s], Ratio[c][0][s]);
 					if(Ratio2[a][0][s]!=0){
-						//System.out.println("Ratio 2 " + Ratio2[a][0][s]);
+						System.out.println("Ratio 2 " + Ratio2[a][0][s]);
 						Ratio2[a][0][s] = Ratio2[a][0][s] * Goal;
 						System.out.println("Goal # of Machines " + Ratio2[a][0][s]);
 					}
@@ -67,9 +67,9 @@ public class TemporyName {
 			s++;
 		}
 		Result = Balance(Goal, Ratio2);
-		/**/for(int i=0; i<Result.length;i++){
+		/*for(int i=0; i<Result.length;i++){
 			System.out.println(Result[0][i][0]);
-		}/**/
+		}*/
 	}
 	
 	public static double Ratios(double[] input){
@@ -99,7 +99,7 @@ public class TemporyName {
 		double[] multiplyer = new double[20];
 		int i = 0;
 		while(i<(result.length)){
-			multiplyer[i] = 1.0 / ratio2[0][0][i];
+			multiplyer[i] = 1.0 / ratio2[i][0][1];
 			i++;
 		}
 		i = 0;

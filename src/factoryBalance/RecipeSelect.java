@@ -36,7 +36,7 @@ public class RecipeSelect {
 		tempRecipe = FindRecipe(input,goal);
 		//	Main sheet 0	column 0
 		Recipes = CT3D(Recipes,tempRecipe,0,0);
-		Sheet++;
+		//Sheet++;
 		while(b<10){
 			if(TestForText(Recipes[0][b][0])==true){
 				try {
