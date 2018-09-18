@@ -46,13 +46,13 @@ public class RecipeLists {
 		
 	//	Type: Science				Code: S		Sheet: 3
 		//	Type: Red Science Pack		Code: SPR
-		String[] SPR = {"1","5",/**/"CG","1",/**/"RCP","1"};
+		String[] SPR = {"2","1","5",/**/"CG","1",/**/"RCP","1"};
 		Small=CT3D(Small,SPR,0,3);
 		//	Type: Green Science Pack	Code: SPG
-		String[] SPG = {"1","6",/**/"IG1","1",/**/"EB3","1",/**/"OB1","1",/**/"OP","1"};
+		String[] SPG = {"4","1","6",/**/"IG1","1",/**/"EB3","1",/**/"OB1","1",/**/"OP","1"};
 		Small=CT3D(Small,SPG,1,3);
 		//	Type: Blue Science Pack		Code: SPB
-		String[] SPB = {"1","12",/**/"IG1","1",/**/"EB3","1",/**/"OB1","1",/**/"OP","1"};
+		String[] SPB = {"4","1","12",/**/"IG1","1",/**/"EB3","1",/**/"OB1","1",/**/"OP","1"};
 		Small=CT3D(Small,SPB,2,3);
 		
 		

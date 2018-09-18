@@ -39,7 +39,7 @@ public class InputDetection {
 				while(i<20){
 					try {
 						if(!Result[a][i][b].contentEquals("")){
-							System.out.println("Result " + Result[a][i][b] + "   Column " + a + " Sheet " + b);
+							System.out.println("Result " + Result[a][i][b] + "   Column " + a + " Row " + i + " Sheet " + b);
 							}
 					} catch (NullPointerException e) {
 						//System.out.println("Null " + a + " " + i + " " + b);

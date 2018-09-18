@@ -6,7 +6,7 @@ public class TemporyName {
 	
 	static int NumOfMachines = 5;
 	static double[][][] Result = new double[10][20][10];
-	static double[][][] Ratio = new double[10][1][10];
+	static double[][][] Ratio = new double[10][10][10];
 	static double[][][] Ratio2 = new double[10][1][10];
 	static double MainRatio = 1;
 	static double Goal = 1;
@@ -22,12 +22,25 @@ public class TemporyName {
 		Input = scanInput.nextLine();
 		Goal = Double.parseDouble(Input);
 		String[][][] RecipeImport = InputDetection.RecieveInput();
+		double[] divisors = new double[10];
+		double[] numOfInports = new double[10];
 		double temp[] = new double[2];
 		String testForNull = "1";
-		int s = 0;
-		int c = 0;
-		int a = 0;
-		while(s<10){
+		int s=0, c=0, a=0, r=0;
+		try {
+			numOfInports[0] = Double.parseDouble(RecipeImport[0][1][0]);
+			divisors[0] = Double.parseDouble(RecipeImport[0][3][0]);
+		} catch (Exception e) {}
+		Ratio[0][0][0] = Double.parseDouble(RecipeImport[0][2][0]) / divisors[0];
+		while(a<numOfInports[0]) {
+			if((r-3)>0 && (r-3)%2==0) {
+				Ratio[0][((r-3)%2)*r+1][0] = Double.parseDouble(RecipeImport[0][r][0]) / divisors[0];
+				System.out.println("Ratio 1 " + Ratio[0][((r-3)%2)*r+1][0] + " Row " + ((r-3)%2)*r+1);
+				a++;
+			}
+			r++;
+		}
+		/*while(s<10){
 			while(c<10){
 				try {
 					temp[0] = Double.parseDouble(RecipeImport[c][1][s]);
@@ -35,8 +48,7 @@ public class TemporyName {
 					Ratio[a][0][s] = Ratios(temp);
 					System.out.println("Ratio 1 " + Ratio[a][0][s] + "   Column " + a + " Sheet " + s);
 					a++;
-				} catch (Exception e) {
-				}
+				} catch (Exception e) {}
 				c++;
 			}
 			c=0;
@@ -58,14 +70,13 @@ public class TemporyName {
 						System.out.println("Goal # of Machines " + Ratio2[a][0][s]);
 					}
 					a++;
-				} catch (NullPointerException e) {
-				}
+				} catch (NullPointerException e) {}
 				c++;
 			}
 			c=0;
 			a=0;
 			s++;
-		}
+		}*/
 		Result = Balance(Goal, Ratio2);
 		/*for(int i=0; i<Result.length;i++){
 			System.out.println(Result[0][i][0]);
@@ -82,6 +93,9 @@ public class TemporyName {
 		double result = 0;
 		if(incoming!=0){
 			result = 1;
+		}
+		if(incoming%1==0) {
+			return incoming;
 		}
 		while(i == 0){
 			if(incoming%1==0){
