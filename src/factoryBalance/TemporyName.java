@@ -32,10 +32,11 @@ public class TemporyName {
 			divisors[0] = Double.parseDouble(RecipeImport[0][3][0]);
 		} catch (Exception e) {}
 		Ratio[0][0][0] = Double.parseDouble(RecipeImport[0][2][0]) / divisors[0];
-		while(a<numOfInports[0]) {
+		a++;
+		while(a<numOfInports[0]+1) {
 			if((r-3)>0 && (r-3)%2==0) {
-				Ratio[0][((r-3)%2)*r+1][0] = Double.parseDouble(RecipeImport[0][r][0]) / divisors[0];
-				System.out.println("Ratio 1 " + Ratio[0][((r-3)%2)*r+1][0] + " Row " + ((r-3)%2)*r+1);
+				Ratio[0][a][0] = Double.parseDouble(RecipeImport[0][r][0]) / divisors[0];
+				System.out.println("Ratio 1 " + Ratio[0][a][0] + " Row " + a);
 				a++;
 			}
 			r++;
