@@ -99,6 +99,8 @@ public class RecipeSelect {
 			IsInt = Double.parseDouble(input);
 		} catch (NumberFormatException e) {
 			IsText = true;
+		} catch (NullPointerException e) {
+			
 		}
 		return IsText;
 	}
