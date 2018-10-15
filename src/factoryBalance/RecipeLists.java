@@ -58,13 +58,13 @@ public class RecipeLists {
 		
 	//	Type: Inserters and Belts		Code: I		Sheet: 4
 		//	Type: Inserter				Code: IY1
-		String[] IY1 = {"1","0.5",/**/"Need Inputs"};
+		String[] IY1 = {"1","1","0.5",/**/"Need Inputs"};
 		Small=CT3D(Small,IY1,0,4);
 		//	Type: Fast Inserter			Code: IB1
-		String[] IB1 = {"1","0.5",/**/"Need Inputs"};
+		String[] IB1 = {"1","1","0.5",/**/"Need Inputs"};
 		Small=CT3D(Small,IB1,1,4);
 		//	Type: Filter Inserter		Code: IF1
-		String[] IG1 = {"1","0.5",/**/"Need Inputs"};
+		String[] IG1 = {"1","1","0.5",/**/"Need Inputs"};
 		Small=CT3D(Small,IG1,2,4);
 		
 		
@@ -74,16 +74,16 @@ public class RecipeLists {
 		//	Type: Board Mk2				Code: EB2
 		
 		//	Type: Board Mk3				Code: EB3
-		String[] EB3 = {"1","5",/**/"Need Inputs"};
+		String[] EB3 = {"1","1","5",/**/"Need Inputs"};
 		Small=CT3D(Small,EB3,2,5);
 		
 		
 	//	Type: Oil/Liquids				Code: O		Sheet: 6
 		//	Type: Battery Mk1			Code: OB1
-		String[] OB1 = {"1","5",/**/"Need Inputs"};
+		String[] OB1 = {"1","1","5",/**/"Need Inputs"};
 		Small=CT3D(Small,OB1,0,6);
 		//	Type: Plastic			Code: OP
-		String[] OP = {"1","1",/**/"Need Inputs"};
+		String[] OP = {"1","1","1",/**/"Need Inputs"};
 		Small=CT3D(Small,OP,2,6);
 		
 		
@@ -99,7 +99,7 @@ public class RecipeLists {
 		
 	//	Type: Components				Code: C		Sheet: 8
 		//	Type: Gear					Code: CG
-		String[] CG = {"1","0.5",/**/"RIP","2"};
+		String[] CG = {"1","1","0.5",/**/"RIP","2"};
 		Small=CT3D(Small,CG,0,8);
 		return Small;
 	}

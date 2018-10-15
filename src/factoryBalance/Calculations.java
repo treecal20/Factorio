@@ -2,7 +2,7 @@ package factoryBalance;
 
 import java.util.Scanner;
 
-public class TemporyName {
+public class Calculations {
 	
 	static int NumOfMachines = 5;
 	static double[][][] Result = new double[10][20][10];
@@ -14,29 +14,31 @@ public class TemporyName {
 	static Scanner scanInput = new Scanner(System.in);
 	
 	public static void main(String[] args) {
-		TempName();
+		Calculations();
 	}
 	
-	public static void TempName() {
+	public static void Calculations() {
 		System.out.println("Goal?");
 		Input = scanInput.nextLine();
 		Goal = Double.parseDouble(Input);
 		String[][][] RecipeImport = InputDetection.RecieveInput();
-		double[] divisors = new double[10];
+		double[] divisors = new double[10], multiply = new double[10];
 		double[] numOfInports = new double[10];
 		double temp[] = new double[2];
 		String testForNull = "1";
 		int s=0, c=0, a=0, r=0;
 		try {
 			numOfInports[0] = Double.parseDouble(RecipeImport[0][1][0]);
+			multiply[0] = Double.parseDouble(RecipeImport[0][2][0]);
 			divisors[0] = Double.parseDouble(RecipeImport[0][3][0]);
 		} catch (Exception e) {}
-		Ratio[0][0][0] = Double.parseDouble(RecipeImport[0][2][0]) / divisors[0];
+		Ratio[0][0][0] = (Double.parseDouble(RecipeImport[0][2][0]) / divisors[0]) * multiply[0];
 		a++;
 		while(a<numOfInports[0]+1) {
 			if((r-3)>0 && (r-3)%2==0) {
-				Ratio[0][a][0] = Double.parseDouble(RecipeImport[0][r][0]) / divisors[0];
-				System.out.println("Ratio 1 " + Ratio[0][a][0] + " Row " + a);
+				Ratio[0][a][0] = (Double.parseDouble(RecipeImport[0][r][0]) / divisors[0]) * multiply[0];
+				System.out.println("Ratio 1 " + Ratio[0][a][0] + " Row " + a + " Goal " + (1 / Ratio[0][a][0]));
+				
 				a++;
 			}
 			r++;
