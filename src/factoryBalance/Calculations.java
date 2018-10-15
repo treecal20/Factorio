@@ -26,7 +26,7 @@ public class Calculations {
 		double[] numOfInports = new double[10];
 		double temp[] = new double[2];
 		String testForNull = "1";
-		int s=0, c=0, a=0, r=0;
+		int s=0, c=0, a=0, r=0, b=0;
 		try {
 			numOfInports[0] = Double.parseDouble(RecipeImport[0][1][0]);
 			multiply[0] = Double.parseDouble(RecipeImport[0][2][0]);
@@ -38,7 +38,10 @@ public class Calculations {
 			if((r-3)>0 && (r-3)%2==0) {
 				Ratio[0][a][0] = (Double.parseDouble(RecipeImport[0][r][0]) / divisors[0]) * multiply[0];
 				System.out.println("Ratio 1 " + Ratio[0][a][0] + " Row " + a + " Goal " + (1 / Ratio[0][a][0]));
-				
+				multiply[a] = (1 / Ratio[0][a][0]);
+				while(b<numOfInports[1]+1) {
+					
+				}
 				a++;
 			}
 			r++;
