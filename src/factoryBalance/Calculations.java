@@ -40,7 +40,7 @@ public class Calculations {
 				System.out.println("Ratio 1 " + Ratio[0][a][0] + " Row " + a + " Goal " + (1 / Ratio[0][a][0]));
 				multiply[a] = (1 / Ratio[0][a][0]);
 				while(b<numOfInports[1]+1) {
-					
+					b++;
 				}
 				a++;
 			}

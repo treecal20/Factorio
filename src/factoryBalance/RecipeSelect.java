@@ -33,7 +33,7 @@ public class RecipeSelect {
 		String[][][] Result = null;
 		String[] tempRecipe = null;
 		String[] tempRecipe2 = null;
-		tempRecipe = FindRecipe(input,goal);
+		tempRecipe = FindRecipe(input,goal,false);
 		//	Main sheet 0	column 0
 		Recipes = CT3D(Recipes,tempRecipe,0,0);
 		//Sheet++;
@@ -46,14 +46,11 @@ public class RecipeSelect {
 					} else {
 						Find = Recipes[0][b][0];
 						System.out.println("Find " + Find);
-						tempRecipe2 = FindRecipe(input,Find);
+						tempRecipe2 = FindRecipe(input,Find,false);
 						Recipes = CT3D(Recipes,tempRecipe2,Column,Sheet);
 						Column++;
 					}
-				} catch (NullPointerException e) {
-					// TODO Auto-generated catch block
-					//e.printStackTrace();
-				}
+				} catch (NullPointerException e) {}
 				
 			}
 			b++;
@@ -62,12 +59,12 @@ public class RecipeSelect {
 		return Result;
 	}
 	
-	public static String[] FindRecipe(String[][][] input, String goal){
+	public static String[] FindRecipe(String[][][] input, String goal,boolean mode){
 		int i = 0;
 		int c = 0;
 		int Sheet = 0;
 		int Column = 0;
-		String[] result = null;
+		String[] result = null, result2 = new String[2];
 		while(c<10){
 			while(i<10){
 				try {
@@ -75,8 +72,10 @@ public class RecipeSelect {
 						System.out.println("Goal Name Found");
 						String[] Temp = SpliceCode(input[c][i][1]);
 						Column = Integer.parseInt(Temp[0]);
+						result2[0] = ""+Column;
 						//System.out.println(Column);
 						Sheet = Integer.parseInt(Temp[1]);
+						result2[1] = ""+Sheet;
 						//System.out.println(Sheet);
 						String[] tempRecipe = GetRecipe(input,Column,Sheet,goal);
 						result = tempRecipe;
@@ -89,7 +88,11 @@ public class RecipeSelect {
 			i=0;
 			c++;
 		}
-		return result;
+		if(mode) {
+			return result2;
+		} else {
+			return result;
+		}
 	}
 	
 	public static boolean TestForText(String input){
