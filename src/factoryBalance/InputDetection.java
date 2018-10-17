@@ -8,9 +8,7 @@ public class InputDetection {
 	static Scanner scanInput = new Scanner(System.in);
 	
 	public static void main(String[] args) {
-		System.out.println("Recipe?");
-		Input = scanInput.nextLine();
-		DetectInput(Input);
+		Calculations.Calculations();
 	}
 	
 	public static String[][][] RecieveInput(){

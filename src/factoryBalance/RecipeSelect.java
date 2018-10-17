@@ -1,6 +1,9 @@
 package factoryBalance;
 
 public class RecipeSelect {
+	public static void main(String[] args) {
+		Calculations.Calculations();
+	}
 	public static String[][][] RecipeSelection(String input){
 		String[][][] RecipeImport = RecipeLists.RecipeList();
 		String[][][] Result = Decode(RecipeImport, input);

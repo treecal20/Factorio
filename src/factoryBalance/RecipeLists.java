@@ -137,4 +137,7 @@ public class RecipeLists {
 	"?EB3!(1)$(5):(NAI)NAI;.",
 	"?OB1!(1)$(5):(NAI)NAI;.",
 	"?OP!(1)$(1):(NAI)NAI;.";*/
+	public static void main(String[] args) {
+		Calculations.Calculations();
+	}
 }
