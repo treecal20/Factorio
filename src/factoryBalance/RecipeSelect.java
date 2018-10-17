@@ -1,14 +1,17 @@
 package factoryBalance;
 
 public class RecipeSelect {
+	public static String[][][] RECIPE_IMPORT = RecipeLists.RecipeList();
+	
 	public static void main(String[] args) {
 		Calculations.Calculations();
 	}
+	
 	public static String[][][] RecipeSelection(String input){
-		String[][][] RecipeImport = RecipeLists.RecipeList();
-		String[][][] Result = Decode(RecipeImport, input);
+		String[][][] Result = Decode(RECIPE_IMPORT, input);
 		return Result;
 	}
+	
 	public static String[][][] CT3D(String[][][] list, String[] input, int column, int sheet){
 		String[][][] result = list;
 		int row = 0;
@@ -24,6 +27,7 @@ public class RecipeSelect {
 		}
 		return result;
 	}
+	
 	public static String[][][] Decode(String[][][] input, String goal){
 		int i = 0;
 		int a = 0;
@@ -36,7 +40,7 @@ public class RecipeSelect {
 		String[][][] Result = null;
 		String[] tempRecipe = null;
 		String[] tempRecipe2 = null;
-		tempRecipe = FindRecipe(input,goal,false);
+		tempRecipe = FindRecipe(input,goal);
 		//	Main sheet 0	column 0
 		Recipes = CT3D(Recipes,tempRecipe,0,0);
 		//Sheet++;
@@ -49,9 +53,9 @@ public class RecipeSelect {
 					} else {
 						Find = Recipes[0][b][0];
 						System.out.println("Find " + Find);
-						tempRecipe2 = FindRecipe(input,Find,false);
+						tempRecipe2 = FindRecipe(RECIPE_IMPORT,Find);
 						Recipes = CT3D(Recipes,tempRecipe2,Column,Sheet);
-						Column++;
+						Sheet++;
 					}
 				} catch (NullPointerException e) {}
 				
@@ -62,12 +66,52 @@ public class RecipeSelect {
 		return Result;
 	}
 	
-	public static String[] FindRecipe(String[][][] input, String goal,boolean mode){
+	public static void RecursiveLayers(String input) {
+		String[][][] allLayers = new String[10][20][20];
+		String[] goal = new String[10];
+		int i = 0;
+		boolean areAllThreadsDone = false;
+		do {
+			if(i == 0) {
+				goal[0] = input;
+				allLayers[0] = Layer(goal);
+			} else {
+				allLayers[i] = Layer(goal);
+			}
+			i++;
+		} while (areAllThreadsDone == false);
+	}
+	
+	public static String[][] FindGoals(String[][] input) {
+		String[][] result = new String[10][10];
+		int a=0;
+		for(int i=0; i<input.length; i++) {
+			for(int j=0; j<input[i].length; j++) {
+				if(TestForText(input[i][j])) {
+					result[i][a] = input[i][j];
+					a++;
+				}
+			}
+		}
+		return result;
+	}
+	
+	public static String[][] Layer(String[] input){
+		String[][] result = new String[input.length][];
+		for(int i=0; i<input.length; i++) {
+			if(!input[i].contentEquals(null)) {
+				result[i] = FindRecipe(RECIPE_IMPORT, input[i]);
+			}
+		}
+		return result;
+	}
+	
+	public static String[] FindRecipe(String[][][] input, String goal){
 		int i = 0;
 		int c = 0;
 		int Sheet = 0;
 		int Column = 0;
-		String[] result = null, result2 = new String[2];
+		String[] result = null;
 		while(c<10){
 			while(i<10){
 				try {
@@ -75,10 +119,8 @@ public class RecipeSelect {
 						System.out.println("Goal Name Found");
 						String[] Temp = SpliceCode(input[c][i][1]);
 						Column = Integer.parseInt(Temp[0]);
-						result2[0] = ""+Column;
 						//System.out.println(Column);
 						Sheet = Integer.parseInt(Temp[1]);
-						result2[1] = ""+Sheet;
 						//System.out.println(Sheet);
 						String[] tempRecipe = GetRecipe(input,Column,Sheet,goal);
 						result = tempRecipe;
@@ -91,18 +133,14 @@ public class RecipeSelect {
 			i=0;
 			c++;
 		}
-		if(mode) {
-			return result2;
-		} else {
-			return result;
-		}
+		return result;
 	}
 	
 	public static boolean TestForText(String input){
 		boolean IsText = false;
-		double IsInt = 0;
+		double IsNum = 0;
 		try {
-			IsInt = Double.parseDouble(input);
+			IsNum = Double.parseDouble(input);
 		} catch (NumberFormatException e) {
 			IsText = true;
 		} catch (NullPointerException e) {

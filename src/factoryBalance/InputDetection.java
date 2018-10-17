@@ -14,11 +14,7 @@ public class InputDetection {
 	public static String[][][] RecieveInput(){
 		System.out.println("Recipe?");
 		Input = scanInput.nextLine();
-		return DetectInput(Input);
-	}
-	
-	public static String[][][] DetectInput(String input){
-		return CombineRecipes(input);
+		return CombineRecipes(Input);
 	}
 	
 	public static String[][][] CombineRecipes(String input){
