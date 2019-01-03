@@ -2,6 +2,7 @@ package factoryBalance;
 
 public class RecipeSelect {
 	public static String[][][] RECIPE_IMPORT = RecipeLists.RecipeList();
+	public static boolean THREADS_DONE = true;
 	
 	public static void main(String[] args) {
 		Calculations.Calculations();
@@ -36,25 +37,25 @@ public class RecipeSelect {
 		int Sheet = 0;
 		int Column = 0;
 		String Find = "";
-		String[][][] Recipes = new String[10][20][10];
-		String[][][] Result = null;
+		String[][][] recipes = new String[10][20][10];
+		String[][][] result = null;
 		String[] tempRecipe = null;
 		String[] tempRecipe2 = null;
-		tempRecipe = FindRecipe(input,goal);
+		/*tempRecipe = FindRecipe(input,goal);
 		//	Main sheet 0	column 0
-		Recipes = CT3D(Recipes,tempRecipe,0,0);
+		recipes = CT3D(recipes,tempRecipe,0,0);
 		//Sheet++;
 		while(b<10){
-			if(TestForText(Recipes[0][b][0])==true){
+			if(TestForText(recipes[0][b][0])==true){
 				try {
-					if(Recipes[0][b][0].contentEquals("Need Inputs")){
+					if(recipes[0][b][0].contentEquals("Need Inputs")){
 						System.out.println("Need Inputs");
 						
 					} else {
-						Find = Recipes[0][b][0];
+						Find = recipes[0][b][0];
 						System.out.println("Find " + Find);
 						tempRecipe2 = FindRecipe(RECIPE_IMPORT,Find);
-						Recipes = CT3D(Recipes,tempRecipe2,Column,Sheet);
+						recipes = CT3D(recipes,tempRecipe2,Column,Sheet);
 						Sheet++;
 					}
 				} catch (NullPointerException e) {}
@@ -62,46 +63,75 @@ public class RecipeSelect {
 			}
 			b++;
 		}
-		Result = Recipes;
-		return Result;
+		//result = Recipes;
+		//result = RecursiveLayers(goal);*/
+		return RecursiveLayers(goal);
 	}
 	
-	public static void RecursiveLayers(String input) {
+	public static String[][][] RecursiveLayers(String input) {
 		String[][][] allLayers = new String[10][20][20];
 		String[] goal = new String[10];
 		int i = 0;
-		boolean areAllThreadsDone = false;
 		do {
 			if(i == 0) {
 				goal[0] = input;
 				allLayers[0] = Layer(goal);
+				if(!CheckThread(allLayers[0])) {
+					THREADS_DONE = true;
+				} else {
+					THREADS_DONE = false;
+				}
 			} else {
+				THREADS_DONE = true;
+				goal = FindGoals(allLayers[i-1]);
 				allLayers[i] = Layer(goal);
 			}
 			i++;
-		} while (areAllThreadsDone == false);
+		} while(THREADS_DONE == false);
+		return allLayers;
 	}
 	
-	public static String[][] FindGoals(String[][] input) {
-		String[][] result = new String[10][10];
-		int a=0;
-		for(int i=0; i<input.length; i++) {
-			for(int j=0; j<input[i].length; j++) {
-				if(TestForText(input[i][j])) {
-					result[i][a] = input[i][j];
-					a++;
+	public static boolean CheckThread(String[][] input) {
+		boolean result = false;
+		try {
+			for(int i=0; i<input.length; i++) {
+				for(int j=0; j<input[i].length; j++) {
+					if(!input[i][j].contentEquals("RAW MAT")) {
+						result = true;
+					}
 				}
 			}
-		}
+		} catch (NullPointerException e) {}
+		return result;
+	}
+	
+	public static String[] FindGoals(String[][] input) {
+		String[] result = new String[30];
+		int a=0;
+		try {
+			for(int i=0; i<input.length; i++) {
+				for(int j=1; j<input[i].length; j++) {
+					if(TestForText(input[i][j]) && !input[i][j].contentEquals("RAW MAT")) {
+						THREADS_DONE = false;
+						result[a] = input[i][j];
+						System.out.println(result[a]);
+						a++;
+					}
+				}
+			}
+		} catch (NullPointerException e) {}
 		return result;
 	}
 	
 	public static String[][] Layer(String[] input){
 		String[][] result = new String[input.length][];
 		for(int i=0; i<input.length; i++) {
-			if(!input[i].contentEquals(null)) {
-				result[i] = FindRecipe(RECIPE_IMPORT, input[i]);
-			}
+			try {
+				if(!input[i].contentEquals("") && !input[i].contentEquals("RAW MAT")) {
+					System.out.println("Find " + input[i]);
+					result[i] = FindRecipe(RECIPE_IMPORT, input[i]);
+				}
+			} catch(NullPointerException e) {}
 		}
 		return result;
 	}

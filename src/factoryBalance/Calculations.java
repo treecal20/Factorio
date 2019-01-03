@@ -23,23 +23,23 @@ public class Calculations {
 		Goal = Double.parseDouble(Input);
 		String[][][] RecipeImport = InputDetection.RecieveInput();
 		double[] divisors = new double[10], multiply = new double[10];
-		double[] numOfInports = new double[10];
+		double[] numOfImports = new double[10];
 		double temp[] = new double[2];
 		String testForNull = "1";
 		int s=0, c=0, a=0, r=0, b=0;
 		try {
-			numOfInports[0] = Double.parseDouble(RecipeImport[0][1][0]);
+			numOfImports[0] = Double.parseDouble(RecipeImport[0][1][0]);
 			multiply[0] = Double.parseDouble(RecipeImport[0][2][0]);
 			divisors[0] = Double.parseDouble(RecipeImport[0][3][0]);
 		} catch (Exception e) {}
 		Ratio[0][0][0] = (Double.parseDouble(RecipeImport[0][2][0]) / divisors[0]) * multiply[0];
 		a++;
-		while(a<numOfInports[0]+1) {
+		while(a<numOfImports[0]+1) {
 			if((r-3)>0 && (r-3)%2==0) {
 				Ratio[0][a][0] = (Double.parseDouble(RecipeImport[0][r][0]) / divisors[0]) * multiply[0];
 				System.out.println("Ratio 1 " + Ratio[0][a][0] + " Row " + a + " Goal " + (1 / Ratio[0][a][0]) * Goal);
 				multiply[a] = (1 / Ratio[0][a][0]);
-				while(b<numOfInports[1]+1) {
+				while(b<numOfImports[1]+1) {
 					b++;
 				}
 				a++;
