@@ -138,6 +138,6 @@ public class RecipeLists {
 	"?OB1!(1)$(5):(NAI)NAI;.",
 	"?OP!(1)$(1):(NAI)NAI;.";*/
 	public static void main(String[] args) {
-		Calculations.Calculations();
+		Calculations.calculate();
 	}
 }

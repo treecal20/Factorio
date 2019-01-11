@@ -5,12 +5,12 @@ public class RecipeSelect {
 	public static boolean THREADS_DONE = true;
 	
 	public static void main(String[] args) {
-		Calculations.Calculations();
+		Calculations.calculate();
 	}
 	
-	public static String[][][] RecipeSelection(String input){
-		String[][][] Result = Decode(RECIPE_IMPORT, input);
-		return Result;
+	public static String[][][] recipeSelection(String input){
+		String[][][] result = decode(RECIPE_IMPORT, input);
+		return result;
 	}
 	
 	public static String[][][] CT3D(String[][][] list, String[] input, int column, int sheet){
@@ -18,53 +18,12 @@ public class RecipeSelect {
 		int row = 0;
 		while(row<input.length){
 			result[column][row][sheet] = input[row];
-			/*try {
-				if(!result[column][row][sheet].contentEquals("")){
-					System.out.println("Result " + result[column][row][sheet]);
-					}
-			} catch (NullPointerException e) {
-			}*/
 			row++;
 		}
 		return result;
 	}
 	
-	public static String[][][] Decode(String[][][] input, String goal){
-		int i = 0;
-		int a = 0;
-		int b = 0;
-		int c = 0;
-		int Sheet = 0;
-		int Column = 0;
-		String Find = "";
-		String[][][] recipes = new String[10][20][10];
-		String[][][] result = null;
-		String[] tempRecipe = null;
-		String[] tempRecipe2 = null;
-		/*tempRecipe = FindRecipe(input,goal);
-		//	Main sheet 0	column 0
-		recipes = CT3D(recipes,tempRecipe,0,0);
-		//Sheet++;
-		while(b<10){
-			if(TestForText(recipes[0][b][0])==true){
-				try {
-					if(recipes[0][b][0].contentEquals("Need Inputs")){
-						System.out.println("Need Inputs");
-						
-					} else {
-						Find = recipes[0][b][0];
-						System.out.println("Find " + Find);
-						tempRecipe2 = FindRecipe(RECIPE_IMPORT,Find);
-						recipes = CT3D(recipes,tempRecipe2,Column,Sheet);
-						Sheet++;
-					}
-				} catch (NullPointerException e) {}
-				
-			}
-			b++;
-		}
-		//result = Recipes;
-		//result = RecursiveLayers(goal);*/
+	public static String[][][] decode(String[][][] input, String goal){
 		return recursiveLayers(goal);
 	}
 	
@@ -111,7 +70,7 @@ public class RecipeSelect {
 		try {
 			for(int i=0; i<input.length; i++) {
 				for(int j=1; j<input[i].length; j++) {
-					if(TestForText(input[i][j]) && !input[i][j].contentEquals("RAW MAT")) {
+					if(testForText(input[i][j]) && !input[i][j].contentEquals("RAW MAT")) {
 						THREADS_DONE = false;
 						result[a] = input[i][j];
 						System.out.println(result[a]);
@@ -128,36 +87,38 @@ public class RecipeSelect {
 		for(int i=0; i<input.length; i++) {
 			try {
 				if(!input[i].contentEquals("") && !input[i].contentEquals("RAW MAT")) {
+					if(Calculations.TEST_MODE)
 					System.out.println("Find " + input[i]);
-					result[i] = FindRecipe(RECIPE_IMPORT, input[i]);
+					result[i] = findRecipe(RECIPE_IMPORT, input[i]);
 				}
 			} catch(NullPointerException e) {}
 		}
 		return result;
 	}
 	
-	public static String[] FindRecipe(String[][][] input, String goal){
+	public static String[] findRecipe(String[][][] input, String goal){
 		int i = 0;
 		int c = 0;
-		int Sheet = 0;
-		int Column = 0;
+		int sheet = 0;
+		int column = 0;
 		String[] result = null;
 		while(c<10){
 			while(i<10){
 				try {
 					if(input[c][i][0].contentEquals(goal)){
+						if(Calculations.TEST_MODE)
 						System.out.println("Goal Name Found");
-						String[] Temp = SpliceCode(input[c][i][1]);
-						Column = Integer.parseInt(Temp[0]);
-						//System.out.println(Column);
-						Sheet = Integer.parseInt(Temp[1]);
-						//System.out.println(Sheet);
-						String[] tempRecipe = GetRecipe(input,Column,Sheet,goal);
+						String[] Temp = spliceCode(input[c][i][1]);
+						column = Integer.parseInt(Temp[0]);
+						if(Calculations.TEST_MODE)
+						System.out.println(column);
+						sheet = Integer.parseInt(Temp[1]);
+						if(Calculations.TEST_MODE)
+						System.out.println(sheet);
+						String[] tempRecipe = getRecipe(input,column,sheet,goal);
 						result = tempRecipe;
 					}
-				} catch (NullPointerException e) {
-					//System.out.println("Null");
-				}
+				} catch (NullPointerException e) {}
 				i++;
 			}
 			i=0;
@@ -166,28 +127,26 @@ public class RecipeSelect {
 		return result;
 	}
 	
-	public static boolean TestForText(String input){
-		boolean IsText = false;
-		double IsNum = 0;
+	public static boolean testForText(String input){
+		boolean isText = false;
+		double isNum = 0;
 		try {
-			IsNum = Double.parseDouble(input);
+			isNum = Double.parseDouble(input);
 		} catch (NumberFormatException e) {
-			IsText = true;
-		} catch (NullPointerException e) {
-			
-		}
-		return IsText;
+			isText = true;
+		} catch (NullPointerException e) {}
+		return isText;
 	}
 	
-	public static String[] SpliceCode(String Input){
+	public static String[] spliceCode(String input){
 		int i = 0;
 		int b = 0;
-		int length = Input.length();
+		int length = input.length();
 		char temp;
 		String ati = null;
 		String[] spliced = new String[length];
 		while(i<length){
-			temp = Input.charAt(i);
+			temp = input.charAt(i);
 			ati = String.valueOf(temp);
 			if(ati.contentEquals(" ")){
 				b++;
@@ -199,15 +158,15 @@ public class RecipeSelect {
 		return spliced;
 	}
 	
-	public static String[] GetRecipe(String[][][] spliced, int column, int sheet, String name){
+	public static String[] getRecipe(String[][][] spliced, int column, int sheet, String name){
 		int i = 1;
-		String[] Recipe = new String[20];
-		Recipe[0] = name;
+		String[] recipe = new String[20];
+		recipe[0] = name;
 		while(i<20){
-			Recipe[i] = spliced[column][i-1][sheet];
+			recipe[i] = spliced[column][i-1][sheet];
 			i++;
 		}
-		return Recipe;
+		return recipe;
 	}
 	
 	

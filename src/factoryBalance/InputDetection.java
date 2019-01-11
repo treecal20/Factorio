@@ -1,50 +1,45 @@
 package factoryBalance;
 
-
-import java.util.Scanner;
-
 public class InputDetection {
-	static String Input;
-	static Scanner scanInput = new Scanner(System.in);
 	
 	public static void main(String[] args) {
-		Calculations.Calculations();
+		Calculations.calculate();
 	}
 	
-	public static String[][][] RecieveInput(){
+	public static String[][][] recieveInput(){
 		System.out.println("Recipe?");
-		Input = scanInput.nextLine();
-		return CombineRecipes(Input);
+		String input = Calculations.SCAN_INPUT.nextLine();
+		return combineRecipes(input);
 	}
 	
-	public static String[][][] CombineRecipes(String input){
-		String[][][] Result = RecipeSelect.RecipeSelection(input);
+	public static String[][][] combineRecipes(String input){
+		String[][][] result = RecipeSelect.recipeSelection(input);
 		System.out.println("----------------------------------------------------------------------------------");
 		for(int b=0; b<10; b++){
 			for(int a=0; a<20; a++){
 				for(int i=0; i<20; i++){
 					try {
-						if(Result[b][a][i] != null){
-							System.out.println("Result " + Result[b][a][i] + " \tRow " + i + " \tColumn " + a + " \tSheet " + b);
+						if(result[b][a][i] != null){
+							System.out.println("Result " + result[b][a][i] + " \tRow " + i + " \tColumn " + a + " \tSheet " + b);
 						}
 					} catch (Exception e) {}
 				}
 				try {
-					if(Result[b][a][0] != null){
+					if(result[b][a][0] != null){
 						System.out.println("----------------------------------------------------------------------------------");
 					}
 				} catch (Exception e) {}
 			}
 			try {
-				if(Result[b][0][0] != null){
+				if(result[b][0][0] != null){
 					System.out.println("----------------------------------------------------------------------------------");
 				}
 			} catch (Exception e) {}
 		}
-		return Result;
+		return result;
 	}
 	
-	public static int[] FindByName(String[][][] input, String goal){
+	public static int[] findByName(String[][][] input, String goal){
 		int c = 0;
 		int s = 1;
 		boolean foundGoal = false;
@@ -67,45 +62,32 @@ public class InputDetection {
 		return result;
 	}
 	
-	public static String[][] FindInputs(String[][][] input, int column, int sheet){
+	public static String[][] findInputs(String[][][] input, int column, int sheet){
 		int i = 0;
 		int a = 0;
-		String[][] Inputs = new String[10][2];
+		String[][] inputs = new String[10][2];
 		while(i<20||a<10){
-			if(TestForText(input[column][i][sheet])==true){
-				Inputs[a][0] = input[column][i][sheet];
+			if(testForText(input[column][i][sheet])==true){
+				inputs[a][0] = input[column][i][sheet];
 				try {
-					Inputs[a][1] = input[column][i+1][sheet];
+					inputs[a][1] = input[column][i+1][sheet];
 				} catch (NullPointerException e) {
 				}
 				a++;
 			}
 			i++;
 		}
-		return Inputs;
+		return inputs;
 	}
 	
-	public static boolean TestForText(String input){
-		boolean IsText = false;
-		double IsInt = 0;
+	public static boolean testForText(String input){
+		boolean isText = false;
+		double isNum = 0;
 		try {
-			IsInt = Double.parseDouble(input);
+			isNum = Double.parseDouble(input);
 		} catch (NumberFormatException e) {
-			IsText = true;
+			isText = true;
 		}
-		return IsText;
+		return isText;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-//

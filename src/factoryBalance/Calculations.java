@@ -7,14 +7,14 @@ public class Calculations {
 	public static Scanner SCAN_INPUT = new Scanner(System.in);
 	
 	public static void main(String[] args) {
-		Calculations();
+		calculate();
 	}
 	
-	public static void Calculations() {
+	public static void calculate() {
 		System.out.println("Goal?");
 		String input = SCAN_INPUT.nextLine();
 		double goal = Double.parseDouble(input);
-		String[][][] recipeImport = InputDetection.RecieveInput();
+		String[][][] recipeImport = InputDetection.recieveInput();
 		String[][][] result = calcLayers(recipeImport, goal);
 		System.out.println();
 		System.out.println("----------------------------------------------------------------------------------");
