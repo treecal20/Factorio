@@ -89,6 +89,38 @@ public class Calculations {
 		}*/
 	}
 	
+	public static String[][][] calcLayers(String[][][] input) {
+		String[][][] result = new String[input.length][input[0].length][input[0][0].length];
+		
+		return result;
+	}
+	
+	public static String[][] calculateLayer(String[][] layer, String[] goal, int start) {
+		String[][] result = layer;
+		for(int i=start; i<goal.length+start; i++) {
+			double output = Double.parseDouble(layer[i][3]), time = Double.parseDouble(layer[i][4]);
+			double outPerSec = output / time;
+			
+			int inputCount = Integer.parseInt(layer[i][2]);
+			int[] inputs = new int[inputCount];
+			double[] inPerSec = new double[inputCount];
+			for(int j=0; j<inputs.length; j++) {
+				inputs[j] = Integer.parseInt(layer[i][6+(j*2)]);
+				inPerSec[j] = inputs[j] / time;
+			}
+			
+			double numOfMachines = Double.parseDouble(goal[i]) / outPerSec;
+			result[i][1] = numOfMachines + "";
+			
+			double[] numOfInputs = new double[inputCount];
+			for(int j=0; j<inputs.length; j++) {
+				numOfInputs[j] = Double.parseDouble(goal[i]) / inPerSec[j];
+				result[i][6+(j*2)] = numOfInputs[j] + "";
+			}
+		}
+		return result;
+	}
+	
 	public static double Ratios(double[] input){
 		double result = input[0] / input [1];
 		return result;

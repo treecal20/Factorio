@@ -19,16 +19,27 @@ public class InputDetection {
 	
 	public static String[][][] CombineRecipes(String input){
 		String[][][] Result = RecipeSelect.RecipeSelection(input);
+		System.out.println("----------------------------------------------------------------------------------");
 		for(int b=0; b<10; b++){
 			for(int a=0; a<20; a++){
 				for(int i=0; i<20; i++){
 					try {
 						if(Result[b][a][i] != null){
-							System.out.println("Result " + Result[b][a][i] + "   Column " + i + " Row " + a + " Sheet " + b);
+							System.out.println("Result " + Result[b][a][i] + " \tRow " + i + " \tColumn " + a + " \tSheet " + b);
 						}
 					} catch (Exception e) {}
 				}
+				try {
+					if(Result[b][a][0] != null){
+						System.out.println("----------------------------------------------------------------------------------");
+					}
+				} catch (Exception e) {}
 			}
+			try {
+				if(Result[b][0][0] != null){
+					System.out.println("----------------------------------------------------------------------------------");
+				}
+			} catch (Exception e) {}
 		}
 		return Result;
 	}

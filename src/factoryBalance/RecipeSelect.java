@@ -65,33 +65,33 @@ public class RecipeSelect {
 		}
 		//result = Recipes;
 		//result = RecursiveLayers(goal);*/
-		return RecursiveLayers(goal);
+		return recursiveLayers(goal);
 	}
 	
-	public static String[][][] RecursiveLayers(String input) {
+	public static String[][][] recursiveLayers(String input) {
 		String[][][] allLayers = new String[10][20][20];
 		String[] goal = new String[10];
 		int i = 0;
 		do {
 			if(i == 0) {
 				goal[0] = input;
-				allLayers[0] = Layer(goal);
-				if(!CheckThread(allLayers[0])) {
+				allLayers[0] = layer(goal);
+				if(!checkThread(allLayers[0])) {
 					THREADS_DONE = true;
 				} else {
 					THREADS_DONE = false;
 				}
 			} else {
 				THREADS_DONE = true;
-				goal = FindGoals(allLayers[i-1]);
-				allLayers[i] = Layer(goal);
+				goal = findGoals(allLayers[i-1]);
+				allLayers[i] = layer(goal);
 			}
 			i++;
 		} while(THREADS_DONE == false);
 		return allLayers;
 	}
 	
-	public static boolean CheckThread(String[][] input) {
+	public static boolean checkThread(String[][] input) {
 		boolean result = false;
 		try {
 			for(int i=0; i<input.length; i++) {
@@ -105,7 +105,7 @@ public class RecipeSelect {
 		return result;
 	}
 	
-	public static String[] FindGoals(String[][] input) {
+	public static String[] findGoals(String[][] input) {
 		String[] result = new String[30];
 		int a=0;
 		try {
@@ -123,7 +123,7 @@ public class RecipeSelect {
 		return result;
 	}
 	
-	public static String[][] Layer(String[] input){
+	public static String[][] layer(String[] input){
 		String[][] result = new String[input.length][];
 		for(int i=0; i<input.length; i++) {
 			try {
