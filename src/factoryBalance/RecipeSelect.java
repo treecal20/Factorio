@@ -1,16 +1,15 @@
 package factoryBalance;
 
+import java.util.List;
+import java.util.ArrayList;
+
 public class RecipeSelect {
-	public static String[][][] RECIPE_IMPORT = RecipeLists.RecipeList();
 	public static boolean THREADS_DONE = true;
+	public static VanillaRecipes RECIPES = new VanillaRecipes();
+	public static List<Item[]> requestedRecipes;
 	
 	public static void main(String[] args) {
 		Calculations.calculate();
-	}
-	
-	public static String[][][] recipeSelection(String input){
-		String[][][] result = decode(RECIPE_IMPORT, input);
-		return result;
 	}
 	
 	public static String[][][] CT3D(String[][][] list, String[] input, int column, int sheet){
@@ -23,106 +22,82 @@ public class RecipeSelect {
 		return result;
 	}
 	
-	public static String[][][] decode(String[][][] input, String goal){
-		return recursiveLayers(goal);
-	}
-	
-	public static String[][][] recursiveLayers(String input) {
-		String[][][] allLayers = new String[10][20][20];
-		String[] goal = new String[10];
+	public static List<Item[]> recursiveLayers(String input) {
+		requestedRecipes = new ArrayList<Item[]>();
+		List<String> goal = new ArrayList<String>();
 		int i = 0;
 		do {
 			if(i == 0) {
-				goal[0] = input;
-				allLayers[0] = layer(goal);
-				if(!checkThread(allLayers[0])) {
+				goal.add(input);
+				Item[] temp = {RECIPES.findItem(goal.get(0))};
+				requestedRecipes.add(temp);
+				
+				if(!checkThread(requestedRecipes.get(0)[0])) {
 					THREADS_DONE = true;
 				} else {
 					THREADS_DONE = false;
 				}
 			} else {
 				THREADS_DONE = true;
-				goal = findGoals(allLayers[i-1]);
-				allLayers[i] = layer(goal);
+				
+				goal = findGoals(requestedRecipes.get(i-1));
+				requestedRecipes.add(layer(goal));
 			}
 			i++;
 		} while(THREADS_DONE == false);
-		return allLayers;
+		return requestedRecipes;
 	}
 	
-	public static boolean checkThread(String[][] input) {
+	public static boolean checkThread(Item inputRecipe) {
 		boolean result = false;
-		try {
-			for(int i=0; i<input.length; i++) {
-				for(int j=0; j<input[i].length; j++) {
-					if(!input[i][j].contentEquals("RAW MAT")) {
-						result = true;
-					}
+		String[] inputRecipeInputs = inputRecipe.inputNames();
+		if(inputRecipeInputs != null) {
+			for(int i=0; i<inputRecipeInputs.length; i++) {
+				if(inputRecipeInputs[i] != null && !inputRecipeInputs[i].contentEquals("RAW_MAT")) {
+					result = true;
 				}
 			}
-		} catch (NullPointerException e) {}
-		return result;
-	}
-	
-	public static String[] findGoals(String[][] input) {
-		String[] result = new String[30];
-		int a=0;
-		try {
-			for(int i=0; i<input.length; i++) {
-				for(int j=1; j<input[i].length; j++) {
-					if(testForText(input[i][j]) && !input[i][j].contentEquals("RAW MAT")) {
-						THREADS_DONE = false;
-						result[a] = input[i][j];
-						System.out.println(result[a]);
-						a++;
-					}
-				}
-			}
-		} catch (NullPointerException e) {}
-		return result;
-	}
-	
-	public static String[][] layer(String[] input){
-		String[][] result = new String[input.length][];
-		for(int i=0; i<input.length; i++) {
-			try {
-				if(!input[i].contentEquals("") && !input[i].contentEquals("RAW MAT")) {
-					if(Calculations.TEST_MODE)
-					System.out.println("Find " + input[i]);
-					result[i] = findRecipe(RECIPE_IMPORT, input[i]);
-				}
-			} catch(NullPointerException e) {}
 		}
 		return result;
 	}
 	
-	public static String[] findRecipe(String[][][] input, String goal){
-		int i = 0;
-		int c = 0;
-		int sheet = 0;
-		int column = 0;
-		String[] result = null;
-		while(c<10){
-			while(i<10){
-				try {
-					if(input[c][i][0].contentEquals(goal)){
-						if(Calculations.TEST_MODE)
-						System.out.println("Goal Name Found");
-						String[] Temp = spliceCode(input[c][i][1]);
-						column = Integer.parseInt(Temp[0]);
-						if(Calculations.TEST_MODE)
-						System.out.println(column);
-						sheet = Integer.parseInt(Temp[1]);
-						if(Calculations.TEST_MODE)
-						System.out.println(sheet);
-						String[] tempRecipe = getRecipe(input,column,sheet,goal);
-						result = tempRecipe;
+	public static List<String> findGoals(Item[] inputRecipe) {
+		List<String[]> inputRecipeInputs = new ArrayList<String[]>();
+		List<String> result = new ArrayList<String>();
+		for(int i=0; i<inputRecipe.length; i++) {
+			//System.out.println(inputRecipe[i].toString());
+			inputRecipeInputs.add(inputRecipe[i].inputNames());
+		}
+		if(inputRecipeInputs != null) {
+			for(int i=0; i<inputRecipeInputs.size(); i++) {
+				if(inputRecipeInputs.get(i) != null) {
+					for(int j=0; j<inputRecipeInputs.get(i).length; j++) {
+						if(testForText(inputRecipeInputs.get(i)[j]) && !inputRecipeInputs.get(i)[j].contentEquals("RAW_MAT")) {
+							
+							THREADS_DONE = false;
+							
+							result.add(inputRecipeInputs.get(i)[j]);
+							System.out.println(result.get(result.size()-1));
+						}
 					}
-				} catch (NullPointerException e) {}
-				i++;
+				}
 			}
-			i=0;
-			c++;
+		}
+		return result;
+	}
+	
+	public static Item[] layer(List<String> input){
+		Item[] result = new Item[input.size()];
+		for(int i=0; i<input.size(); i++) {
+			if(input.get(i) != null) {
+				if(!input.get(i).contentEquals("") && !input.get(i).contentEquals("RAW_MAT")) {
+					
+					if(Calculations.TEST_MODE)
+					System.out.println("Find " + input.get(i));
+					
+					result[i] = RECIPES.findItem(input.get(i));
+				}
+			}
 		}
 		return result;
 	}
@@ -130,11 +105,13 @@ public class RecipeSelect {
 	public static boolean testForText(String input){
 		boolean isText = false;
 		double isNum = 0;
-		try {
-			isNum = Double.parseDouble(input);
-		} catch (NumberFormatException e) {
-			isText = true;
-		} catch (NullPointerException e) {}
+		if(input != null) {
+			try {
+				isNum = Double.parseDouble(input);
+			} catch (NumberFormatException e) {
+				isText = true;
+			}
+		}
 		return isText;
 	}
 	
