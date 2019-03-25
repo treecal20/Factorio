@@ -15,6 +15,7 @@ public class RecipeSelect {
 		System.out.println("Recipe?");
 		String input = scan.nextLine();
 		RecipeTree temp = new RecipeTree(RECIPES.findItem(input), RECIPES);
+		//temp.printTree();
 		System.out.println("OutPerSec?");
 		BigDecimal inputDouble = new BigDecimal(scan.nextDouble());
 		System.out.println("Crafting Speed?");

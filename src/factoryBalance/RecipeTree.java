@@ -18,16 +18,18 @@ public class RecipeTree {
 		this.book = inputBook;
 		this.textTree = new ArrayList<String>();
 		List<Item> temp = new ArrayList<Item>();
+		List<Integer> temp2 = new ArrayList<Integer>();
 		this.treeLevels = 1;
 		temp.add(inputRecipe);
-		this.overallRoot = buildTree(1, temp);
+		temp2.add(1);
+		this.overallRoot = buildTree(1, temp, temp2);
 	}
 	
 	public RecipeNode overallRoot() {
 		return this.overallRoot;
 	}
 	
-	private RecipeNode buildTree(int n, List<Item> input) {
+	private RecipeNode buildTree(int n, List<Item> input, List<Integer> prevLayerFormat) {
 		/*if(input==null||input.size()==0) {
 			System.out.println("Input is null or empty");
 			return null;
@@ -38,27 +40,35 @@ public class RecipeTree {
         } else {
     		//System.out.println("Level: " + n);
         	//System.out.println(input.size());
-        	List<RecipeNode> childNodes = new ArrayList<RecipeNode>();
+        	List<Integer> layerFormat = new ArrayList<Integer>();
         	for(int i=0; i<input.size(); i++) {
-            	List<List<Item>> temp = getAllOptions(input.get(i).inputNames());
-            	for(int j=0; j<temp.size(); j++) {
-            		childNodes.add(buildTree(n + 1, temp.get(j)));
-            	}
+        		layerFormat.add(input.get(i).inputSize());
         	}
+        	List<RecipeNode> childNodes = new ArrayList<RecipeNode>();
+            List<List<Item>> temp = getAllOptions(input);
+            for(int j=0; j<temp.size(); j++) {
+            	childNodes.add(buildTree(n + 1, temp.get(j), layerFormat));
+            }
         	if(n>this.treeLevels) {
         		this.treeLevels = n;
         	}
-            return new RecipeNode(input, childNodes);
+            return new RecipeNode(input, childNodes, prevLayerFormat);
         }
     }
 	
-	private List<List<Item>> getAllOptions(String[] goals) {
+	private List<List<Item>> getAllOptions(List<Item> input) {
+		List<String> goals = new ArrayList<String>();
+		for(int i=0; i<input.size(); i++) {
+			for(int j=0; j<input.get(i).inputSize(); j++) {
+				goals.add(input.get(i).inputNames()[j]);
+			}
+		}
 		List<List<Item>> result = new ArrayList<List<Item>>();
 		List<List<Item>> allDupes = new ArrayList<List<Item>>();
-		int[] multiLength = new int[goals.length];
+		int[] multiLength = new int[goals.size()];
 		boolean isSingle = true;
-		for(int i=0; i<goals.length; i++) {
-			multiLength[i] = this.book.numberOfDuplicates(goals[i]);
+		for(int i=0; i<goals.size(); i++) {
+			multiLength[i] = this.book.numberOfDuplicates(goals.get(i));
 			//System.out.println("Length: " + multiLength[i]);
 			if(multiLength[i] != 1) {
 				isSingle = false;
@@ -68,7 +78,7 @@ public class RecipeTree {
 			for (int i = 0; i < multiLength.length; i++) {
 				List<Item> temp = new ArrayList<Item>();
 				for (int j = 0; j < multiLength[i]; j++) {
-					temp.add(this.book.findDuplicate(goals[i], j));
+					temp.add(this.book.findDuplicate(goals.get(i), j));
 					//System.out.println("Item " + j + ":\n" + temp.get(j));
 				}
 				allDupes.add(temp);
@@ -83,8 +93,8 @@ public class RecipeTree {
 			}
 		} else {
 			List<Item> temp = new ArrayList<Item>();
-			for(int i=0; i<goals.length; i++) {
-				temp.add(this.book.findItem(goals[i]));
+			for(int i=0; i<goals.size(); i++) {
+				temp.add(this.book.findItem(goals.get(i)));
 			}
 			result.add(temp);
 		}
@@ -129,19 +139,21 @@ public class RecipeTree {
 		if(node == null) {
 			return;
 		}
-		List<List<BigDecimal>> requiredInPerSec = new ArrayList<List<BigDecimal>>();
-		for(int i=0; i<node.layerSize(); i++) {
-			Item thisItem = node.getItem(i);
-			BigDecimal[] input = thisItem.inPerSec();
-			node.setMachineNum(requiredOutPerSec.get(i).divide(craftingSpeed.multiply(thisItem.outPerSec()), 5, RoundingMode.HALF_UP), i);
-			List<BigDecimal> temp = new ArrayList<BigDecimal>();
-			for(int j=0; j<input.length; j++) {
-				temp.add(node.getMachineNum(i).multiply(craftingSpeed.multiply(input[j])));
+		List<BigDecimal> requiredInPerSec = new ArrayList<BigDecimal>();
+		int place=0;
+		for(int i=0; i<node.layerSize().size(); i++) {
+			for (int j = 0; j < node.layerSize().get(i); j++) {
+				Item thisItem = node.getItem(j, i);
+				BigDecimal[] input = thisItem.inPerSec();
+				node.setMachineNum(requiredOutPerSec.get(place).divide(craftingSpeed.multiply(thisItem.outPerSec()), 5, RoundingMode.HALF_UP), j, i);
+				for (int k = 0; k < input.length; k++) {
+					requiredInPerSec.add(node.getMachineNum(j, i).multiply(craftingSpeed.multiply(input[k])));
+				}
+				place++;
 			}
-			requiredInPerSec.add(temp);
 		}
 		for(int i=0; i<node.numOfChildren(); i++) {
-			calculateTree(node.getChildNode(i), requiredInPerSec.get(i), craftingSpeed);
+			calculateTree(node.getChildNode(i), requiredInPerSec, craftingSpeed);
 		}
 	}
 	
