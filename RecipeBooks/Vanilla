@@ -3,6 +3,7 @@ Wooden_Chest Storage 1.0 0.5 2 Wood
 Yellow_Transport_Belt Belt_Transport_System 2.0 0.5 1 1 Iron_Gear_Wheel Iron_Plate
 Red_Transport_Belts Belt_Transport_System 1.0 0.5 5 1 Iron_Gear_Wheel Yellow_Transport_Belt
 Inserter Inserters 1.0 0.5 1 1 1 Green_Electronic_Circuit Iron_Gear_Wheel Iron_Plate
+Inserter Inserters 2.0 0.5 1 1 1 Green_Electronic_Circuit Iron_Gear_Wheel Iron_Plate
 Long_Handed_Inserter Inserters 1.0 0.5 1 1 1 Inserter Iron_Gear_Wheel Iron_Plate
 Fast_Inserter Inserters 1.0 0.5 2 1 2 Green_Electronic_Circuit Inserter Iron_Plate
 Filter_Inserter Inserters 1.0 0.5 4 1 Green_Electronic_Circuit Fast_Inserter

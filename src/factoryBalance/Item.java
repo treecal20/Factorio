@@ -1,46 +1,83 @@
 package factoryBalance;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Item {
 	
 	private String[] inputNames;
+	private String[] multipleOutputNames;
 	
 	private String name;
 	private String type;
 	
-	private int[] inputQuantities;
+	private BigDecimal[] inputQuantities;
 	
 	private int allSize;
 	private int inputSize;
 	private int longestStringLength;
 	private int padLength;
 	
-	private double time;
-	private double output;
-	private double machineNum;
+	private BigDecimal[] multipleOutputs;
+	
+	private BigDecimal time;
+	private BigDecimal output;
+	private BigDecimal machineNum;
 	
 	private boolean padToStringMethod;
+	private boolean hasMultipleOutputs;
 	
 	public Item(String itemType, String itemName, double itemOutput, double itemTime, int[] itemInputQuantities, String[] itemInputNames) {
 		this.type = itemType;
-		this.machineNum = 1.0;
+		this.machineNum = new BigDecimal(1.0);
 		this.name = itemName;
-		this.output = itemOutput;
-		this.time = itemTime;
-		this.inputQuantities = itemInputQuantities;
+		this.output = new BigDecimal(itemOutput, MathContext.DECIMAL32);
+		this.time = new BigDecimal(itemTime, MathContext.DECIMAL32);
+		this.inputQuantities = new BigDecimal[itemInputQuantities.length];
+		for(int i=0; i<this.inputQuantities.length; i++) {
+			this.inputQuantities[i] = new BigDecimal(itemInputQuantities[i], MathContext.DECIMAL32);
+		}
 		this.inputNames = itemInputNames;
 		this.inputSize = itemInputQuantities.length;
 		this.allSize = 4 + itemInputQuantities.length + itemInputNames.length;
 		this.padLength = 0;
 		this.padToStringMethod = false;
+		this.hasMultipleOutputs = false;
+		findLongestStringLength();
+	}
+	
+	public Item(String itemType, String itemName, String[] itemMultiOutputNames, double[] itemMultiOutputs, double itemTime, int[] itemInputQuantities, String[] itemInputNames) {
+		this.type = itemType;
+		this.machineNum = new BigDecimal(1.0);
+		this.name = itemName;
+		this.multipleOutputNames = itemMultiOutputNames;
+		this.multipleOutputs = new BigDecimal[itemMultiOutputs.length];
+		for(int i=0; i<this.multipleOutputs.length; i++) {
+			this.multipleOutputs[i] = new BigDecimal(itemMultiOutputs[i], MathContext.DECIMAL32);
+		}
+		this.time = new BigDecimal(itemTime, MathContext.DECIMAL32);
+		this.inputQuantities = new BigDecimal[itemInputQuantities.length];
+		for(int i=0; i<this.inputQuantities.length; i++) {
+			this.inputQuantities[i] = new BigDecimal(itemInputQuantities[i], MathContext.DECIMAL32);
+		}
+		this.inputNames = itemInputNames;
+		this.inputSize = itemInputQuantities.length;
+		this.allSize = 2 + itemMultiOutputNames.length + itemMultiOutputs.length + itemInputQuantities.length + itemInputNames.length;
+		this.padLength = 0;
+		this.padToStringMethod = false;
+		this.hasMultipleOutputs = true;
 		findLongestStringLength();
 	}
 	
 	public Item(String itemName, double itemOutput, double itemTime) {
-		this.machineNum = 1.0;
+		this.machineNum = new BigDecimal(1.0);
 		this.type = "infinite";
 		this.name = itemName;
-		this.output = itemOutput;
-		this.time = itemTime;
+		this.output = new BigDecimal(itemOutput, MathContext.DECIMAL32);
+		this.time = new BigDecimal(itemTime, MathContext.DECIMAL32);
 		this.allSize = 4;
 		this.padToStringMethod = false;
 		this.padLength = 0;
@@ -54,15 +91,23 @@ public class Item {
 		return this.type;
 	}
 	
-	public double time() {
+	public BigDecimal time() {
 		return this.time;
 	}
 	
-	public double output() {
+	public BigDecimal output() {
 		return this.output;
 	}
 	
-	public int[] inputQuantities() {
+	public BigDecimal[] multipleOutputs() {
+		return this.multipleOutputs;
+	}
+	
+	public String[] multipleOutputNames() {
+		return this.multipleOutputNames;
+	}
+	
+	public BigDecimal[] inputQuantities() {
 		return this.inputQuantities;
 	}
 	
@@ -78,8 +123,24 @@ public class Item {
 		return this.inputSize;
 	}
 	
-	public double machineNum() {
+	public BigDecimal machineNum() {
 		return this.machineNum;
+	}
+	
+	public boolean hasMultipleOutputs() {
+		return this.hasMultipleOutputs;
+	}
+	
+	public BigDecimal outPerSec() {
+		return this.output.divide(this.time, 5, RoundingMode.HALF_UP);
+	}
+	
+	public BigDecimal[] inPerSec() {
+		BigDecimal[] rtn = new BigDecimal[this.inputQuantities.length];
+		for(int i=0; i<rtn.length; i++) {
+			rtn[i] = this.inputQuantities[i].divide(this.time, 5, RoundingMode.HALF_UP);
+		}
+		return rtn;
 	}
 	
 	public void setPadToStringMethod(boolean input) {
@@ -93,7 +154,14 @@ public class Item {
 	public String toString() {
 		String rtn = "";
 		if(this.padToStringMethod) {
-			rtn = this.padString("Name: " + this.name,this.padLength) + "\n"+this.padString("Type: " + this.type,this.padLength) + "\n"+this.padString("Number of Machines = " + this.machineNum,this.padLength) + "\n"+this.padString("Size = " + this.allSize,this.padLength) + "\n" + this.padString(this.output + " out every " + this.time,this.padLength) + "\n"+this.padString("Inputs:",this.padLength)+"\n";
+			rtn = this.padString("Name: " + this.name,this.padLength) + "\n" + this.padString("Type: " + this.type,this.padLength) + "\n" + this.padString("Number of Machines = " + this.machineNum,this.padLength) + "\n" + this.padString("Size = " + this.allSize,this.padLength) + "\n";
+			if(this.hasMultipleOutputs) {
+				for(int i=0; i<this.multipleOutputNames.length; i++) {
+					rtn = rtn + this.padString("Output " + (i+1) + ": " + this.multipleOutputNames[i] + " at", this.padLength) + "\n" + this.padString(this.multipleOutputs[i] + " out every " + this.time, this.padLength);
+				}
+			} else {
+				rtn = rtn + this.padString(this.output + " out every " + this.time,this.padLength) + "\n" + this.padString("Inputs:",this.padLength) + "\n";
+			}
 			for(int i=0; i<inputSize; i++) {
 				rtn = rtn + this.padString(this.inputQuantities[i] + "   " + this.inputNames[i],this.padLength);
 				if(i!=inputSize-1) {
@@ -122,19 +190,27 @@ public class Item {
 		return input;
 	}
 	
-	public String[] toStringArray() {
-		String[] rtn = new String[allSize];
-		rtn[0] = this.name;
-		rtn[1] = "" + this.output;
-		rtn[2] = "" + this.time;
+	public List<String> toStringList() {
+		List<String> rtn = new ArrayList<String>();
+		rtn.add(this.name);
+		rtn.add("" + this.machineNum);
+		if(this.hasMultipleOutputs) {
+			for(int i=0; i<this.multipleOutputNames.length; i++) {
+				rtn.add(this.multipleOutputNames[i]);
+				rtn.add("" + this.multipleOutputs[i]);
+			}
+		} else {
+			rtn.add("" + this.output);
+		}
+		rtn.add("" + this.time);
 		for(int i=0; i<inputSize; i++) {
-			rtn[i*2+3] = this.inputNames[i];
-			rtn[i*2+4] = "" + this.inputQuantities[i];
+			rtn.add(this.inputNames[i]);
+			rtn.add("" + this.inputQuantities[i]);
 		}
 		return rtn;
 	}
 	
-	public void setMachineNumber(double inputMachineNum) {
+	public void setMachineNumber(BigDecimal inputMachineNum) {
 		this.machineNum = inputMachineNum;
 	}
 	
@@ -149,8 +225,19 @@ public class Item {
 		if(("Size = " + this.allSize).length()>longestLength) {
 			longestLength = ("Size = " + this.allSize).length();
 		}
-		if((this.output + " out every " + this.time).length()>longestLength) {
-			longestLength = (this.output + " out every " + this.time).length();
+		if (this.hasMultipleOutputs) {
+			for(int i=0; i<this.multipleOutputNames.length; i++) {
+				if(("Output " + (i+1) + ": " + this.multipleOutputNames[i] + " at").length()>longestLength) {
+					longestLength = ("Output " + (i+1) + ": " + this.multipleOutputNames[i] + " at").length();
+				}
+				if((this.multipleOutputs[i] + " out every " + this.time).length()>longestLength) {
+					longestLength = (this.multipleOutputs[i] + " out every " + this.time).length();
+				}
+			}
+		} else {
+			if ((this.output + " out every " + this.time).length() > longestLength) {
+				longestLength = (this.output + " out every " + this.time).length();
+			} 
 		}
 		if(("Inputs:").length()>longestLength) {
 			longestLength = ("Number of Machines = " + this.machineNum).length();
@@ -165,5 +252,15 @@ public class Item {
 	
 	public int longestStringLength() {
 		return this.longestStringLength;
+	}
+	
+	public boolean isAllRaw() {
+		boolean result = true;
+		for(int i=0; i<this.inputNames.length; i++) {
+			if(!this.inputNames[i].contentEquals("RAW_MAT")) {
+				result = false;
+			}
+		}
+		return result;
 	}
 }

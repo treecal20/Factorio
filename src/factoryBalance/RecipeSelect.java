@@ -1,6 +1,8 @@
 package factoryBalance;
 
 import java.util.List;
+import java.util.Scanner;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class RecipeSelect {
@@ -9,20 +11,20 @@ public class RecipeSelect {
 	public static List<Item[]> requestedRecipes;
 	
 	public static void main(String[] args) {
-		Calculations.calculate();
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Recipe?");
+		String input = scan.nextLine();
+		RecipeTree temp = new RecipeTree(RECIPES.findItem(input), RECIPES);
+		System.out.println("OutPerSec?");
+		BigDecimal inputDouble = new BigDecimal(scan.nextDouble());
+		System.out.println("Crafting Speed?");
+		BigDecimal craftSpeed = new BigDecimal(scan.nextDouble());
+		temp.calculateTree(inputDouble, craftSpeed);
+		scan.close();
+		//Calculations.calculate();
 	}
 	
-	public static String[][][] CT3D(String[][][] list, String[] input, int column, int sheet){
-		String[][][] result = list;
-		int row = 0;
-		while(row<input.length){
-			result[column][row][sheet] = input[row];
-			row++;
-		}
-		return result;
-	}
-	
-	public static List<Item[]> recursiveLayers(String input) {
+	public static void recursiveLayers(String input) {
 		requestedRecipes = new ArrayList<Item[]>();
 		List<String> goal = new ArrayList<String>();
 		int i = 0;
@@ -45,7 +47,6 @@ public class RecipeSelect {
 			}
 			i++;
 		} while(THREADS_DONE == false);
-		return requestedRecipes;
 	}
 	
 	public static boolean checkThread(Item inputRecipe) {
@@ -103,47 +104,14 @@ public class RecipeSelect {
 	}
 	
 	public static boolean testForText(String input){
-		boolean isText = false;
-		double isNum = 0;
-		if(input != null) {
-			try {
-				isNum = Double.parseDouble(input);
-			} catch (NumberFormatException e) {
-				isText = true;
+		boolean isText = true;
+		String[] numList = {"0","1","2","3","4","5","6","7","8","9"};
+		for(int i=0; i<10; i++) {
+			if(input.contains(numList[i])) {
+				isText = false;
 			}
 		}
 		return isText;
-	}
-	
-	public static String[] spliceCode(String input){
-		int i = 0;
-		int b = 0;
-		int length = input.length();
-		char temp;
-		String ati = null;
-		String[] spliced = new String[length];
-		while(i<length){
-			temp = input.charAt(i);
-			ati = String.valueOf(temp);
-			if(ati.contentEquals(" ")){
-				b++;
-			} else {
-				spliced[b] = ati;
-			}
-			i++;
-		}
-		return spliced;
-	}
-	
-	public static String[] getRecipe(String[][][] spliced, int column, int sheet, String name){
-		int i = 1;
-		String[] recipe = new String[20];
-		recipe[0] = name;
-		while(i<20){
-			recipe[i] = spliced[column][i-1][sheet];
-			i++;
-		}
-		return recipe;
 	}
 	
 	

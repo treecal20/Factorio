@@ -2,6 +2,7 @@ package factoryBalance;
 
 import java.util.Scanner;
 import java.util.List;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class Calculations {
@@ -51,17 +52,20 @@ public class Calculations {
 					isRAW = true;
 				}
 				if(!isRAW) {
-					double output = layer[i].output(), time = layer[i].time();
+					double output = layer[i].output().doubleValue(), time = layer[i].time().doubleValue();
 					double outPerSec = output / time;
 					
 					int inputCount = layer[i].inputSize();
-					int[] inputs = layer[i].inputQuantities();
+					double[] inputs = new double[layer[i].inputQuantities().length];
+					for(int j=0; j<inputs.length; j++) {
+						inputs[j] = layer[i].inputQuantities()[j].doubleValue();
+					}
 					double[] inPerSec = new double[inputCount];
 					for (int j = 0; j < inputs.length; j++) {
 						inPerSec[j] = inputs[j] / time;
 					}
 					
-					layer[i].setMachineNumber(goal[goalState] / outPerSec);
+					layer[i].setMachineNumber(new BigDecimal(goal[goalState] / outPerSec));
 					if(TEST_MODE) {
 						if(layer.toString() != null) {
 							System.out.println(layer.toString());
@@ -91,7 +95,7 @@ public class Calculations {
 				if(layer[i] != null && !layer[i].name().contentEquals("RAW MAT")) {
 					for (int j = 0; j < layer[i].inputSize(); j++) {
 						if(layer[i].inputNames()[j] != null) {
-							result[a] = layer[i].inputQuantities()[j];
+							result[a] = layer[i].inputQuantities()[j].doubleValue();
 							a++;
 						}
 					} 
