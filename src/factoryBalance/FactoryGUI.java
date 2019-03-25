@@ -23,7 +23,7 @@ public class FactoryGUI {
 		System.out.println(s);
 		String input = SCAN_INPUT.nextLine();
 		if(fuzzyContentFilter(input,SEARCH_FOR[0])) {
-			Calculations.calculate();
+			CalculationInteractionController.startInteraction();
 		} else if(fuzzyContentFilter(input,SEARCH_FOR[1])) {
 			FileInteractionController.startInteraction();
 		} else if(fuzzyContentFilter(input,SEARCH_FOR[2])) {
