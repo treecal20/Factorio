@@ -145,7 +145,8 @@ public class RecipeTree {
 			for (int j = 0; j < node.layerSize().get(i); j++) {
 				Item thisItem = node.getItem(j, i);
 				BigDecimal[] input = thisItem.inPerSec();
-				node.setMachineNum(requiredOutPerSec.get(place).divide(craftingSpeed.multiply(thisItem.outPerSec()), 5, RoundingMode.HALF_UP), j, i);
+				node.setMachineNum(requiredOutPerSec.get(place).multiply(thisItem.time()).divide(craftingSpeed.multiply(thisItem.output()), 2, RoundingMode.HALF_UP), j, i);
+				//node.setMachineNum(requiredOutPerSec.get(place).divide(craftingSpeed.multiply(thisItem.outPerSec()), 5, RoundingMode.HALF_UP), j, i);
 				for (int k = 0; k < input.length; k++) {
 					requiredInPerSec.add(node.getMachineNum(j, i).multiply(craftingSpeed.multiply(input[k])));
 				}
