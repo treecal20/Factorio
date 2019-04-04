@@ -1,33 +1,33 @@
 Vanilla
-Wooden_Chest Storage 1.0 0.5 2 Wood
-Yellow_Transport_Belt Belt_Transport_System 2.0 0.5 1 1 Iron_Gear_Wheel Iron_Plate
-Red_Transport_Belts Belt_Transport_System 1.0 0.5 5 1 Iron_Gear_Wheel Yellow_Transport_Belt
-Inserter Inserters 1.0 0.5 1 1 1 Green_Electronic_Circuit Iron_Gear_Wheel Iron_Plate
-Long_Handed_Inserter Inserters 1.0 0.5 1 1 1 Inserter Iron_Gear_Wheel Iron_Plate
-Fast_Inserter Inserters 1.0 0.5 2 1 2 Green_Electronic_Circuit Inserter Iron_Plate
-Filter_Inserter Inserters 1.0 0.5 4 1 Green_Electronic_Circuit Fast_Inserter
-Stack_Inserter Inserters 1.0 0.5 1 15 1 15 Red_Electronic_Circuit Green_Electronic_Circuit Fast_Inserter Iron_Gear_Wheel
-Stack_Filter_Inserter Inserters 1.0 0.5 5 1 Green_Electronic_Circuit Stack_Inserter
-Pipe Energy_And_Pipe_Distribution 1.0 0.5 1 Iron_Plate
-Petroleum_Gas Resources_And_Fluids 40.0 5.0 100 Crude_Oil
-Sulfuric_Acid Resources_And_Fluids 50.0 1.0 1 5 100 Iron_Plate Sulfur Water
-Iron_Ore Resources_And_Fluids 1.0 1.0 1 RAW_MAT
-Copper_Ore Resources_And_Fluids 1.0 1.0 1 RAW_MAT
-Coal Resources_And_Fluids 1.0 1.0 1 RAW_MAT
-Crude_Oil Resources_And_Fluids 1.0 1.0 1 RAW_MAT
-Water Resources_And_Fluids 1.0 1.0 1 RAW_MAT
-Plastic_Bars Materials 2.0 1.0 1 20 Coal Petroleum_Gas
-Solid_Fuel Materials 1.0 2.0 20 Petroleum_Gas
-Sulfur Materials 2.0 1.0 30 30 Petroleum_Gas Water
-Steel_Plate Materials 1.0 16.0 5 Iron_Plate
-Iron_Plate Materials 1.0 3.2 1 Iron_Ore
-Copper_Plate Materials 1.0 3.2 1 Copper_Ore
-Iron_Gear_Wheel Crafting_Components 1.0 0.5 2 Iron_Plate
-Green_Electronic_Circuit Crafting_Components 1.0 0.5 3 1 Copper_Cables Iron_Plate
-Red_Electronic_Circuit Crafting_Components 1.0 6.0 4 2 2 Copper_Cables Green_Electronic_Circuit Plastic_Bars
-Blue_Electronic_Circuit Crafting_Components 1.0 10.0 2 20 5 Red_Electronic_Circuit Green_Electronic_Circuit Sulfuric_Acid
-Copper_Cables Crafting_Components 2.0 0.5 1 Copper_Plate
-Engine_Unit Crafting_Components 1.0 10.0 1 2 1 Iron_Gear_Wheel Pipe Steel_Plate
-Red_Science_Pack Science_Packs 1.0 5.0 1 1 Iron_Gear_Wheel Copper_Plate
-Green_Science_Pack Science_Packs 1.0 6.0 1 1 Inserter Yellow_Transport_Belt
-Blue_Science_Pack Science_Packs 2.0 24.0 3 2 1 Red_Electronic_Circuit Engine_Unit Solid_Fuel
+Linear Wooden_Chest Storage 1 0.5 2 Wood
+Linear Yellow_Transport_Belt Belt_Transport_System 2 0.5 1 1 Iron_Gear_Wheel Iron_Plate
+Linear Red_Transport_Belts Belt_Transport_System 1 0.5 5 1 Iron_Gear_Wheel Yellow_Transport_Belt
+Linear Inserter Inserters 1 0.5 1 1 1 Green_Electronic_Circuit Iron_Gear_Wheel Iron_Plate
+Linear Long_Handed_Inserter Inserters 1 0.5 1 1 1 Inserter Iron_Gear_Wheel Iron_Plate
+Linear Fast_Inserter Inserters 1 0.5 2 1 2 Green_Electronic_Circuit Inserter Iron_Plate
+Linear Filter_Inserter Inserters 1 0.5 4 1 Green_Electronic_Circuit Fast_Inserter
+Linear Stack_Inserter Inserters 1 0.5 1 15 1 15 Red_Electronic_Circuit Green_Electronic_Circuit Fast_Inserter Iron_Gear_Wheel
+Linear Stack_Filter_Inserter Inserters 1 0.5 5 1 Green_Electronic_Circuit Stack_Inserter
+Linear Pipe Energy_And_Pipe_Distribution 1 0.5 1 Iron_Plate
+Multiple Basic_Oil_Processing Resources_And_Fluids 30 30 40 Heavy_Oil Light_Oil Petroleum_Gas 5 100 Crude_Oil
+Linear Sulfuric_Acid Resources_And_Fluids 50 1 1 5 100 Iron_Plate Sulfur Water
+Linear Iron_Ore Resources_And_Fluids 1 1 1 RAW_MAT
+Linear Copper_Ore Resources_And_Fluids 1 1 1 RAW_MAT
+Linear Coal Resources_And_Fluids 1 1 1 RAW_MAT
+Linear Crude_Oil Resources_And_Fluids 1 1 1 RAW_MAT
+Linear Water Resources_And_Fluids 1 1 1 RAW_MAT
+Linear Plastic_Bars Materials 2 1 1 20 Coal Petroleum_Gas
+Linear Solid_Fuel Materials 1 2 20 Petroleum_Gas
+Linear Sulfur Materials 2 1 30 30 Petroleum_Gas Water
+Linear Steel_Plate Materials 1 16 5 Iron_Plate
+Linear Iron_Plate Materials 1 3.200000 1 Iron_Ore
+Linear Copper_Plate Materials 1 3.200000 1 Copper_Ore
+Linear Iron_Gear_Wheel Crafting_Components 1 0.5 2 Iron_Plate
+Linear Green_Electronic_Circuit Crafting_Components 1 0.5 3 1 Copper_Cables Iron_Plate
+Linear Red_Electronic_Circuit Crafting_Components 1 6 4 2 2 Copper_Cables Green_Electronic_Circuit Plastic_Bars
+Linear Blue_Electronic_Circuit Crafting_Components 1 10 2 20 5 Red_Electronic_Circuit Green_Electronic_Circuit Sulfuric_Acid
+Linear Copper_Cables Crafting_Components 2 0.5 1 Copper_Plate
+Linear Engine_Unit Crafting_Components 1 10 1 2 1 Iron_Gear_Wheel Pipe Steel_Plate
+Linear Red_Science_Pack Science_Packs 1 5 1 1 Iron_Gear_Wheel Copper_Plate
+Linear Green_Science_Pack Science_Packs 1 6 1 1 Inserter Yellow_Transport_Belt
+Linear Blue_Science_Pack Science_Packs 2 24 3 2 1 Red_Electronic_Circuit Engine_Unit Solid_Fuel

@@ -24,12 +24,13 @@ public class FactoryGUI {
 		String input = SCAN_INPUT.nextLine();
 		if(fuzzyContentFilter(input,SEARCH_FOR[0])) {
 			CalculationInteractionController.startInteraction();
+			factoryInterfaceOptions();
 		} else if(fuzzyContentFilter(input,SEARCH_FOR[1])) {
 			FileInteractionController.startInteraction();
+			factoryInterfaceOptions();
 		} else if(fuzzyContentFilter(input,SEARCH_FOR[2])) {
 			System.out.println("Factory Interaction Ended");
 		}
-		factoryInterfaceOptions();
 	}
 	
 	public static boolean fuzzyContentFilter(String input, String[] search) {

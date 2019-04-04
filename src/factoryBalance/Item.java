@@ -13,10 +13,12 @@ public class Item {
 	
 	private String name;
 	private String type;
+	private String format;
 	
 	private BigDecimal[] inputQuantities;
 	
 	private int allSize;
+	private int outputSize;
 	private int inputSize;
 	private int longestStringLength;
 	private int padLength;
@@ -30,7 +32,8 @@ public class Item {
 	private boolean padToStringMethod;
 	private boolean hasMultipleOutputs;
 	
-	public Item(String itemType, String itemName, double itemOutput, double itemTime, int[] itemInputQuantities, String[] itemInputNames) {
+	public Item(String itemType, String itemName, double itemOutput, double itemTime, int[] itemInputQuantities, String[] itemInputNames, String itemFormat) {
+		this.format = itemFormat;
 		this.type = itemType;
 		this.machineNum = new BigDecimal(1.0);
 		this.name = itemName;
@@ -46,15 +49,18 @@ public class Item {
 		this.padLength = 0;
 		this.padToStringMethod = false;
 		this.hasMultipleOutputs = false;
+		this.outputSize = 1;
 		findLongestStringLength();
 	}
 	
-	public Item(String itemType, String itemName, String[] itemMultiOutputNames, double[] itemMultiOutputs, double itemTime, int[] itemInputQuantities, String[] itemInputNames) {
+	public Item(String itemType, String itemName, String[] itemMultiOutputNames, double[] itemMultiOutputs, double itemTime, int[] itemInputQuantities, String[] itemInputNames, String itemFormat) {
+		this.format = itemFormat;
 		this.type = itemType;
 		this.machineNum = new BigDecimal(1.0);
 		this.name = itemName;
 		this.multipleOutputNames = itemMultiOutputNames;
 		this.multipleOutputs = new BigDecimal[itemMultiOutputs.length];
+		this.outputSize = itemMultiOutputs.length;
 		for(int i=0; i<this.multipleOutputs.length; i++) {
 			this.multipleOutputs[i] = new BigDecimal(itemMultiOutputs[i], MathContext.DECIMAL32);
 		}
@@ -83,8 +89,31 @@ public class Item {
 		this.padLength = 0;
 	}
 	
+	public int outputSize() {
+		return this.outputSize;
+	}
+	
+	public String format() {
+		return this.format;
+	}
+	
 	public String name() {
 		return this.name;
+	}
+	
+	public boolean hasThisOutput(String inputName) {
+		if(this.hasMultipleOutputs) {
+			for(int i=0; i<this.multipleOutputs.length; i++) {
+				if(this.multipleOutputNames[i].contentEquals(inputName)) {
+					return true;
+				}
+			}
+		} else {
+			if(this.name.contentEquals(inputName)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public String type() {
@@ -138,7 +167,7 @@ public class Item {
 	public BigDecimal[] inPerSec() {
 		BigDecimal[] rtn = new BigDecimal[this.inputQuantities.length];
 		for(int i=0; i<rtn.length; i++) {
-			rtn[i] = this.inputQuantities[i].divide(this.time, 5, RoundingMode.HALF_UP);
+			rtn[i] = this.inputQuantities[i].divide(this.time, 2, RoundingMode.HALF_UP);
 		}
 		return rtn;
 	}

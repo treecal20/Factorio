@@ -37,23 +37,23 @@ public class RecipeTree {
         if(checkForAllRawMat(input)) {
     		//System.out.println("Raw at: " + n);
             return null;
-        } else {
-    		//System.out.println("Level: " + n);
-        	//System.out.println(input.size());
-        	List<Integer> layerFormat = new ArrayList<Integer>();
-        	for(int i=0; i<input.size(); i++) {
-        		layerFormat.add(input.get(i).inputSize());
-        	}
-        	List<RecipeNode> childNodes = new ArrayList<RecipeNode>();
-            List<List<Item>> temp = getAllOptions(input);
-            for(int j=0; j<temp.size(); j++) {
-            	childNodes.add(buildTree(n + 1, temp.get(j), layerFormat));
-            }
-        	if(n>this.treeLevels) {
-        		this.treeLevels = n;
-        	}
-            return new RecipeNode(input, childNodes, prevLayerFormat);
         }
+    	//System.out.println("Level: " + n);
+        //System.out.println(input.size());
+        List<Integer> layerFormat = new ArrayList<Integer>();
+        for(int i=0; i<input.size(); i++) {
+        	layerFormat.add(input.get(i).inputSize());
+        }
+        List<RecipeNode> childNodes = new ArrayList<RecipeNode>();
+        List<List<Item>> temp = getAllOptions(input);
+        for(int j=0; j<temp.size(); j++) {
+           	childNodes.add(buildTree(n + 1, temp.get(j), layerFormat));
+        }
+        if(n>this.treeLevels) {
+        	this.treeLevels = n;
+        }
+        return new RecipeNode(input, childNodes, prevLayerFormat);
+        
     }
 	
 	private List<List<Item>> getAllOptions(List<Item> input) {

@@ -21,12 +21,12 @@ public class RecipeBook {
 	private static final String[] SIMILAR_ITEM_OPTIONS = {"Replace Items","Add This Item","Don't Add This Item"};
 	private static final String[][] SIMILAR_ITEM_OPTIONS_SEARCH = {{"replaceitems","ri","1"},{"addthisiItem","ati","2"},{"don'taddthisitem","dontaddthisitem","dati","3"}};
 	
-	public RecipeBook(String bookName, String[] types, String[] names, double[] outputs, double[] times, int[][] inputNumbers, String[][] inputNames) {
+	public RecipeBook(String bookName, String[] types, String[] names, double[] outputs, double[] times, int[][] inputNumbers, String[][] inputNames, String[] formats) {
 		this.size = names.length;
 		this.recipeBookName = bookName;
 		this.items = new ArrayList<Item>();
 		for(int i=0; i<size; i++) {
-			this.items.add(new Item(types[i], names[i], outputs[i], times[i], inputNumbers[i], inputNames[i]));
+			this.items.add(new Item(types[i], names[i], outputs[i], times[i], inputNumbers[i], inputNames[i], formats[i]));
 		}
 	}
 	
@@ -66,7 +66,7 @@ public class RecipeBook {
 	
 	public int getItemIndex(String itemName) {
 		for(int i=0; i<this.size; i++) {
-			if(this.items.get(i).name().contentEquals(itemName)) {
+			if(this.items.get(i).hasThisOutput(itemName)) {
 				return i;
 			}
 		}
@@ -76,7 +76,7 @@ public class RecipeBook {
 	public Item findItem(String itemName) {
 		for(int i=0; i<this.size; i++) {
 			Item thisItem = this.items.get(i);
-			if(thisItem.name().contentEquals(itemName)) {
+			if(thisItem.hasThisOutput(itemName)) {
 				return thisItem;
 			}
 		}
@@ -87,7 +87,7 @@ public class RecipeBook {
 		List<Item> result = new ArrayList<Item>();
 		for(int i=0; i<this.size; i++) {
 			Item thisItem = this.items.get(i);
-			if(thisItem.name().contentEquals(itemName)) {
+			if(thisItem.hasThisOutput(itemName)) {
 				result.add(thisItem);
 			}
 		}
@@ -98,7 +98,7 @@ public class RecipeBook {
 		boolean alreadyExists = false;
 		for(int i=0; i<this.size; i++) {
 			Item thisItem = this.items.get(i);
-			if(thisItem.name().contentEquals(itemName)) {
+			if(thisItem.hasThisOutput(itemName)) {
 				if(alreadyExists) {
 					return true;
 				}
@@ -112,7 +112,7 @@ public class RecipeBook {
 		int result = 0;
 		for(int i=0; i<this.size; i++) {
 			Item thisItem = this.items.get(i);
-			if(thisItem.name().contentEquals(itemName)) {
+			if(thisItem.hasThisOutput(itemName)) {
 				result++;
 			}
 		}
@@ -123,7 +123,7 @@ public class RecipeBook {
 		int k=0;
 		for(int i=0; i<this.size; i++) {
 			Item thisItem = this.items.get(i);
-			if(thisItem.name().contentEquals(itemName)) {
+			if(thisItem.hasThisOutput(itemName)) {
 				if(k==dupeNum) {
 					return thisItem;
 				}
@@ -226,7 +226,18 @@ public class RecipeBook {
 		String s = "" + this.recipeBookName + separator;
 		for(int i=0; i<this.size; i++) {
 			Item thisItem = this.items.get(i);
-			s = s + thisItem.name() + " " + thisItem.type() + " " + thisItem.output() + " " + thisItem.time() + " ";
+			s = s + thisItem.format() + " " + thisItem.name() + " " + thisItem.type() + " ";
+			if(thisItem.hasMultipleOutputs()) {
+				for(int j=0; j<thisItem.outputSize(); j++) {
+					s = s + thisItem.multipleOutputs()[j] + " ";
+				}
+				for(int j=0; j<thisItem.outputSize(); j++) {
+					s = s + thisItem.multipleOutputNames()[j] + " ";
+				}
+				s = s + thisItem.time() + " ";
+			} else {
+				s = s + thisItem.output() + " " + thisItem.time() + " ";
+			}
 			for(int j=0; j<thisItem.inputQuantities().length; j++) {
 				s = s + "" + thisItem.inputQuantities()[j] + " ";
 			}
@@ -252,11 +263,8 @@ public class RecipeBook {
 		
 		Scanner book = new Scanner(new File("C:/Users/Calvin/Documents/GitHub/Factorio/RecipeBooks/" + this.recipeBookName));
 		List<String> bookText = new ArrayList<String>();
-		List<String> names = new ArrayList<String>();
-		List<String> types = new ArrayList<String>();
-		List<Double> outputs = new ArrayList<Double>(), times = new ArrayList<Double>();
-		List<int[]> inputNumbers = new ArrayList<int[]>();
-		List<String[]> inputNames = new ArrayList<String[]>();
+		
+		int newSize = 0;
 		
 		while(book.hasNextLine()) {
 			bookText.add(book.nextLine());
@@ -269,28 +277,55 @@ public class RecipeBook {
 				splitString.add(scanString.next());
 			}
 			scanString.close();
-			int offset = 4;
-			names.add(splitString.get(0));
-			types.add(splitString.get(1));
-			outputs.add(Double.parseDouble(splitString.get(2)));
-			times.add(Double.parseDouble(splitString.get(3)));
-			int[] tempInputNumbers = new int[(splitString.size()-offset)/2];
-			String[] tempInputNames = new String[(splitString.size()-offset)/2];
-			for(int j=0; j<splitString.size()-offset; j++) {
-				if(j<(splitString.size()-offset)/2) {
-					tempInputNumbers[j] = Integer.parseInt(splitString.get(j+offset));
-				} else {
-					tempInputNames[j-((splitString.size()-offset)/2)] = splitString.get(j+offset);
+			if(splitString.get(0).contentEquals("Linear")) {
+				int offset = 5;
+				String name = splitString.get(1);
+				String type = splitString.get(2);
+				double output = Double.parseDouble(splitString.get(3));
+				double time = Double.parseDouble(splitString.get(4));
+				int[] inputNumbers = new int[(splitString.size() - offset) / 2];
+				String[] inputNames = new String[(splitString.size() - offset) / 2];
+				for (int j = 0; j < splitString.size() - offset; j++) {
+					if (j < (splitString.size() - offset) / 2) {
+						inputNumbers[j] = Integer.parseInt(splitString.get(j + offset));
+					} else {
+						inputNames[j - ((splitString.size() - offset) / 2)] = splitString.get(j + offset);
+					}
 				}
+				newSize++;
+				this.items.add(new Item(type, name, output, time, inputNumbers, inputNames, "Linear"));
 			}
-			inputNumbers.add(tempInputNumbers);
-			inputNames.add(tempInputNames);
+			if(splitString.get(0).contentEquals("Multiple")) {
+				int offset = 3;
+				String name = splitString.get(1);
+				String type = splitString.get(2);
+				int outputLength=0;
+				while(isNum(splitString.get(outputLength + offset))) {
+					outputLength++;
+				}
+				offset = offset + outputLength*2 + 1;
+				String[] outputNames = new String[outputLength];
+				double[] outputNumbers = new double[outputLength];
+				for (int j = 0; j < outputLength; j++) {
+					outputNumbers[j] = Double.parseDouble(splitString.get(j + 3));
+					outputNames[j] = splitString.get(j + 3 + outputLength);
+				}
+				double time = Double.parseDouble(splitString.get(offset-1));
+				int[] inputNumbers = new int[(splitString.size() - offset) / 2];
+				String[] inputNames = new String[(splitString.size() - offset) / 2];
+				for (int j = 0; j < splitString.size() - offset; j++) {
+					if (j < (splitString.size() - offset) / 2) {
+						inputNumbers[j] = Integer.parseInt(splitString.get(j + offset));
+					} else {
+						inputNames[j - ((splitString.size() - offset) / 2)] = splitString.get(j + offset);
+					}
+				}
+				newSize++;
+				this.items.add(new Item(type, name, outputNames, outputNumbers, time, inputNumbers, inputNames, "Multiple"));
+			}
 		}
 		
-		this.size = names.size();
-		for(int i=0; i<this.size; i++) {
-			this.items.add(new Item(types.get(i), names.get(i), outputs.get(i), times.get(i), inputNumbers.get(i), inputNames.get(i)));
-		}
+		this.size = newSize;
 		System.out.println("Done!");
 	}
 	
@@ -298,11 +333,6 @@ public class RecipeBook {
 		Scanner scan = new Scanner(System.in);
 		boolean inputNotDone = true;
 		List<String> inputText = new ArrayList<String>();
-		List<String> names = new ArrayList<String>();
-		List<String> types = new ArrayList<String>();
-		List<Double> outputs = new ArrayList<Double>(), times = new ArrayList<Double>();
-		List<int[]> inputNumbers = new ArrayList<int[]>();
-		List<String[]> inputNames = new ArrayList<String[]>();
 		List<Item> itemsToAdd = new ArrayList<Item>();
 		
 		System.out.println("Item format: name type output time inputNumber1-inputNumberN inputName1-inputNameN");
@@ -317,6 +347,7 @@ public class RecipeBook {
 			}
 		}
 		scan.close();
+		int newSize = 0;
 		for(int i=0; i<inputText.size(); i++) {
 			Scanner scanString = new Scanner(inputText.get(i));
 			List<String> splitString = new ArrayList<String>();
@@ -324,27 +355,54 @@ public class RecipeBook {
 				splitString.add(scanString.next());
 			}
 			scanString.close();
-			int offset = 4;
-			names.add(splitString.get(0));
-			types.add(splitString.get(1));
-			outputs.add(Double.parseDouble(splitString.get(2)));
-			times.add(Double.parseDouble(splitString.get(3)));
-			int[] tempInputNumbers = new int[(splitString.size()-offset)/2];
-			String[] tempInputNames = new String[(splitString.size()-offset)/2];
-			for(int j=0; j<splitString.size()-offset; j++) {
-				if(j<(splitString.size()-offset)/2) {
-					tempInputNumbers[j] = Integer.parseInt(splitString.get(j+offset));
-				} else {
-					tempInputNames[j-((splitString.size()-offset)/2)] = splitString.get(j+offset);
+			if(splitString.get(0).contentEquals("Linear")) {
+				int offset = 5;
+				String name = splitString.get(1);
+				String type = splitString.get(2);
+				double output = Double.parseDouble(splitString.get(3));
+				double time = Double.parseDouble(splitString.get(4));
+				int[] inputNumbers = new int[(splitString.size() - offset) / 2];
+				String[] inputNames = new String[(splitString.size() - offset) / 2];
+				for (int j = 0; j < splitString.size() - offset; j++) {
+					if (j < (splitString.size() - offset) / 2) {
+						inputNumbers[j] = Integer.parseInt(splitString.get(j + offset));
+					} else {
+						inputNames[j - ((splitString.size() - offset) / 2)] = splitString.get(j + offset);
+					}
 				}
+				newSize++;
+				itemsToAdd.add(new Item(type, name, output, time, inputNumbers, inputNames, "Linear"));
 			}
-			inputNumbers.add(tempInputNumbers);
-			inputNames.add(tempInputNames);
+			if(splitString.get(0).contentEquals("Multiple")) {
+				int offset = 3;
+				String name = splitString.get(1);
+				String type = splitString.get(2);
+				int outputLength=0;
+				while(isNum(splitString.get(outputLength + offset))) {
+					outputLength++;
+				}
+				offset = offset + outputLength*2 + 1;
+				String[] outputNames = new String[outputLength];
+				double[] outputNumbers = new double[outputLength];
+				for (int j = 0; j < outputLength; j++) {
+					outputNumbers[j] = Double.parseDouble(splitString.get(j + 3));
+					outputNames[j] = splitString.get(j + 3 + outputLength);
+				}
+				double time = Double.parseDouble(splitString.get(offset-1));
+				int[] inputNumbers = new int[(splitString.size() - offset) / 2];
+				String[] inputNames = new String[(splitString.size() - offset) / 2];
+				for (int j = 0; j < splitString.size() - offset; j++) {
+					if (j < (splitString.size() - offset) / 2) {
+						inputNumbers[j] = Integer.parseInt(splitString.get(j + offset));
+					} else {
+						inputNames[j - ((splitString.size() - offset) / 2)] = splitString.get(j + offset);
+					}
+				}
+				newSize++;
+				itemsToAdd.add(new Item(type, name, outputNames, outputNumbers, time, inputNumbers, inputNames, "Multiple"));
+			}
 		}
-		this.size = this.size + names.size();
-		for(int i=0; i<names.size(); i++) {
-			itemsToAdd.add(new Item(types.get(i), names.get(i), outputs.get(i), times.get(i), inputNumbers.get(i), inputNames.get(i)));
-		}
+		this.size = this.size + newSize;
 		similarItemFilter(itemsToAdd);
 		this.printToFile();
 	}
@@ -389,6 +447,16 @@ public class RecipeBook {
 			}
 		}
 		scanInput.close();
+	}
+	
+	public boolean isNum(String input) {
+		boolean rtn = true;
+		try {
+			double temp = Double.parseDouble(input);
+		} catch(NumberFormatException e) {
+			rtn = false;
+		}
+		return rtn;
 	}
 	
 	public static boolean fuzzyContentFilter(String input, String[] search) {
